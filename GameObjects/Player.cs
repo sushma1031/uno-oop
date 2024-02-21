@@ -30,10 +30,12 @@ namespace UnoModellingPractice.GameObjects
                         || previousTurn.Result == TurnResult.Draw) 
                         && HasMatch(previousTurn.DeclaredColor))
             {
+                // Console.WriteLine("1");
                 turn = PlayMatchingCard(previousTurn.DeclaredColor);
             }
             else if (HasMatch(previousTurn.Card))
             {
+                // Console.WriteLine("2");
                 turn = PlayMatchingCard(previousTurn.Card);
             }
             else //Draw a card and see if it can play
@@ -45,7 +47,7 @@ namespace UnoModellingPractice.GameObjects
             return turn;
         }
 
-        protected PlayerTurn DrawCard(PlayerTurn previousTurn, CardDeck drawPile)
+        protected virtual PlayerTurn DrawCard(PlayerTurn previousTurn, CardDeck drawPile)
         {
             PlayerTurn turn = new PlayerTurn();
             var drawnCard = drawPile.Draw(1);
@@ -53,7 +55,7 @@ namespace UnoModellingPractice.GameObjects
             Hand.AddRange(drawnCard);
             // Console.WriteLine("Previous: " + previousTurn.Card.DisplayValue);
 
-            if (IsValidCard(drawnCard[0], previousTurn.Card))
+            if (HasMatch(previousTurn.Card))
             {
                 turn = PlayMatchingCard(previousTurn.Card);
                 turn.Result = TurnResult.PlayedDraw;
@@ -151,7 +153,7 @@ namespace UnoModellingPractice.GameObjects
             {
                 turn.Card = matching.First();
                 turn.DeclaredColor = SelectDominantColor();
-                turn.Result = TurnResult.WildCard;
+                turn.Result = TurnResult.WildDrawFour;
                 Hand.Remove(matching.First());
 
                 return turn;
@@ -222,7 +224,7 @@ namespace UnoModellingPractice.GameObjects
             {
                 turn.Card = matching.First();
                 turn.DeclaredColor = SelectDominantColor();
-                turn.Result = TurnResult.WildCard;
+                turn.Result = TurnResult.WildDrawFour;
                 Hand.Remove(matching.First());
 
                 return turn;
@@ -324,13 +326,13 @@ namespace UnoModellingPractice.GameObjects
             {
                 return CardColor.Wild;
             }
-            var colors = Hand.GroupBy(x => x.Color).OrderByDescending(x => x.Count());
+            var colors = Hand.Where(x => x.Color != CardColor.Wild).GroupBy(x => x.Color).OrderByDescending(x => x.Count());
             return colors.First().First().Color;
         }
 
         private void SortHand()
         {
-            this.Hand = this.Hand.OrderBy(x => x.Color).ThenBy(x => x.Value).ToList();
+            Hand = Hand.OrderBy(x => x.Color).ThenBy(x => x.Value).ToList();
         }
 
         public void ShowHand()

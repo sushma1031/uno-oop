@@ -35,21 +35,27 @@ namespace UnoModellingPractice.GameObjects
                     }
                     if (!input.Equals("Draw")){
                         string[] CardComponents = input.Split(' ');
-                        Console.WriteLine(CardComponents[0]);
+                        //Console.WriteLine(CardComponents[0]);
                         if(!input.Equals("Wild") && (!Enum.IsDefined(typeof(CardColor), CardComponents[0]) 
                         || !Enum.IsDefined(typeof(CardValue), CardComponents[1]))){
                             Console.WriteLine("Invalid card!");
                         }
                         else{
                             CardColor colour = GetCardColor(CardComponents[0]);
-                            CardValue value = GetCardValue(CardComponents[1]);
+                            CardValue value;
+                            if (CardComponents.Length > 1)
+                            {
+                                value = GetCardValue(CardComponents[1]);
+                            } else {
+                                value = GetCardValue("Wild");
+                            }
                             Card chosenCard = new Card(colour, value);
                             Card match = GetCardFromHand(chosenCard);
                             if (match == null)
                             {
                                 Console.WriteLine("Card not in hand!");
                             }
-                            else if (ValidCard(chosenCard, previousTurn, Hand)){
+                            else if (ValidCard(chosenCard, previousTurn)){
                                 turn.Card = chosenCard;
                                 if (chosenCard.Color == CardColor.Wild)
                                 {
@@ -97,6 +103,40 @@ namespace UnoModellingPractice.GameObjects
             return turn;
         }
 
+        protected override PlayerTurn DrawCard(PlayerTurn previousTurn, CardDeck drawPile)
+        {
+            PlayerTurn turn = new PlayerTurn();
+            var drawnCard = drawPile.Draw(1);
+            Console.WriteLine($"Drawn: {drawnCard[0].DisplayValue}");
+            Hand.AddRange(drawnCard);
+            // Console.WriteLine("Previous: " + previousTurn.Card.DisplayValue);
+
+            if (ValidCard(drawnCard[0], previousTurn))
+            {
+                turn.Card = drawnCard[0];
+                if (drawnCard[0].Color == CardColor.Wild)
+                {
+                    Console.Write("Colour: ");
+                    string declaredColour = "";
+                    declaredColour = Console.ReadLine();
+                    turn.DeclaredColor = GetCardColor(declaredColour);
+                }
+                else
+                {
+                    turn.DeclaredColor = turn.Card.Color;
+                }
+                turn.Result = TurnResult.PlayedDraw;
+                Hand.Remove(drawnCard[0]);
+            }
+            else
+            {
+                turn.Result = TurnResult.Draw;
+                turn.Card = previousTurn.Card;
+            }
+
+            return turn;
+        }
+
         private CardColor GetCardColor(string input){
             foreach(CardColor color in Enum.GetValues(typeof(CardColor))){
                 if (input.Equals(color.ToString()))
@@ -127,7 +167,7 @@ namespace UnoModellingPractice.GameObjects
             return null;
         }
 
-        private bool ValidCard(Card chosenCard, PlayerTurn previousTurn , List<Card> Hand){
+        private bool ValidCard(Card chosenCard, PlayerTurn previousTurn){
             if(chosenCard.Color == CardColor.Wild){
                 return true;
             }

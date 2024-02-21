@@ -82,7 +82,10 @@ namespace UnoModellingPractice.GameObjects
             PlayerTurn currentTurn = new PlayerTurn()
             {
                 Result = TurnResult.GameStart,
-                Card = DiscardPile.First(),
+                Card = DiscardPile.First(x => x.Color != CardColor.Wild 
+                && x.Value != CardValue.Reverse 
+                && x.Value != CardValue.Skip 
+                && x.Value != CardValue.DrawTwo),
                 DeclaredColor = DiscardPile.First().Color
             };
 
