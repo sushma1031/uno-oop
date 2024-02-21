@@ -18,7 +18,6 @@ namespace UnoModellingPractice.GameObjects
 
         public virtual PlayerTurn PlayTurn(PlayerTurn previousTurn, CardDeck drawPile)
         {
-            Console.WriteLine("Computer turn");
             PlayerTurn turn = new PlayerTurn();
             if (previousTurn.Result == TurnResult.Skip
                 || previousTurn.Result == TurnResult.DrawTwo
@@ -214,18 +213,7 @@ namespace UnoModellingPractice.GameObjects
             turn.Result = TurnResult.PlayedCard;
             var matching = Hand.Where(x => x.Color == currentDiscard.Color || x.Value == currentDiscard.Value || x.Color == CardColor.Wild).ToList();
 
-            //We cannot play wild draw four unless there are no other matches.
-            if(matching.All(x => x.Value == CardValue.DrawFour))
-            {
-                turn.Card = matching.First();
-                turn.DeclaredColor = SelectDominantColor();
-                turn.Result = TurnResult.WildCard;
-                Hand.Remove(matching.First());
-
-                return turn;
-            }
-
-            //Otherwise, we play the card that would cause the most damage to the next player.
+            //play the card that would cause the most damage to the next player.
             if(matching.Any(x=> x.Value == CardValue.DrawTwo))
             {
                 turn.Card = matching.First(x => x.Value == CardValue.DrawTwo);
@@ -257,7 +245,7 @@ namespace UnoModellingPractice.GameObjects
             }
 
             //At this point the player has a choice of sorts
-            //Assuming they have a match on color AND a match on value, he can choose which to play
+            //Assuming they have a match on color AND a match on value, they can choose which to play
             //We choose the match with MORE possible plays from the hand.
 
             var matchOnColor = matching.Where(x => x.Color == currentDiscard.Color);

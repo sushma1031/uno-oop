@@ -14,7 +14,6 @@ namespace UnoModellingPractice.GameObjects
         }
 
         public override PlayerTurn PlayTurn(PlayerTurn previousTurn, CardDeck drawPile){
-            Console.WriteLine("Human turn");
             PlayerTurn turn = new PlayerTurn();
             if (previousTurn.Result == TurnResult.Skip
                 || previousTurn.Result == TurnResult.DrawTwo
@@ -44,14 +43,15 @@ namespace UnoModellingPractice.GameObjects
                             CardColor colour = GetCardColor(CardComponents[0]);
                             CardValue value = GetCardValue(CardComponents[1]);
                             Card chosenCard = new Card(colour, value);
-                            if (!PresentInHand(chosenCard))
+                            Card match = GetCardFromHand(chosenCard);
+                            if (match == null)
                             {
                                 Console.WriteLine("Card not in hand!");
                             }
                             else if (ValidCard(chosenCard, previousTurn, Hand)){
                                 turn.Card = chosenCard;
                                 turn.DeclaredColor = turn.Card.Color;
-                                Hand.Remove(chosenCard);
+                                Hand.Remove(match);
     
                                 switch(chosenCard.Value){
                                     case CardValue.DrawFour:
@@ -77,6 +77,7 @@ namespace UnoModellingPractice.GameObjects
                         }
                     }else{
                         turn = DrawCard(previousTurn, drawPile);
+                        loop = false;
                     }
                 } while (loop);
                 
@@ -107,23 +108,23 @@ namespace UnoModellingPractice.GameObjects
             return CardValue.Zero;
         }
 
-        private bool PresentInHand(Card chosenCard){
+        private Card GetCardFromHand(Card chosenCard){
             foreach (Card card in Hand){
                 if (card.Color == chosenCard.Color && card.Value == chosenCard.Value)
-                    return true;
+                    return card;
             }
-            return false;
+            return null;
         }
 
         private bool ValidCard(Card chosenCard, PlayerTurn previousTurn , List<Card> Hand){
             if (previousTurn.Result == TurnResult.WildCard && chosenCard.Color != previousTurn.DeclaredColor)
             {
-                Console.WriteLine($"{previousTurn.DeclaredColor.ToString()} != {chosenCard.Color.ToString()}");
+                // Console.WriteLine($"{previousTurn.DeclaredColor.ToString()} != {chosenCard.Color.ToString()}");
                 return false;
             }
             if (!(chosenCard.Color == previousTurn.DeclaredColor || chosenCard.Value == previousTurn.Card.Value))
             {
-                Console.WriteLine($"{previousTurn.DeclaredColor.ToString()} != {chosenCard.Color.ToString()} || {chosenCard.Value.ToString()} != {previousTurn.Card.Value.ToString()}");
+                // Console.WriteLine($"{previousTurn.DeclaredColor.ToString()} != {chosenCard.Color.ToString()} || {chosenCard.Value.ToString()} != {previousTurn.Card.Value.ToString()}");
                 return false;
             }
 

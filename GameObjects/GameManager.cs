@@ -33,7 +33,7 @@ namespace UnoModellingPractice.GameObjects
                 });
             }
 
-            int maxCards = 10;
+            int maxCards = 7 * numPlayers;
             int dealtCards = 0;
 
             while(dealtCards < maxCards)
@@ -76,6 +76,7 @@ namespace UnoModellingPractice.GameObjects
             Console.Write("Your Hand: ");
             Players[0].ShowHand();
 
+            Console.WriteLine("Hit Enter to start!");
             Console.ReadLine();
 
             PlayerTurn currentTurn = new PlayerTurn()
@@ -134,12 +135,7 @@ namespace UnoModellingPractice.GameObjects
             }
 
             var winningPlayer = Players.Where(x => !x.Hand.Any()).First();
-            Console.WriteLine("Player " + winningPlayer.Position.ToString() + " wins!!");
-
-            // foreach(var player in Players)
-            // {
-            //     Console.WriteLine(player + ": " + player.Hand.Sum(x => x.Score).ToString() + " points");
-            // }
+            Console.WriteLine($"!! {winningPlayer} wins !!");
         }
 
         private void AddToDiscardPile(PlayerTurn currentTurn)
