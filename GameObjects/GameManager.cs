@@ -67,8 +67,13 @@ namespace UnoModellingPractice.GameObjects
             // {
             //     player.ShowHand();
             // }
-
-            Console.WriteLine("Your Hand: ");
+            Console.Write("Players: ");
+            var j = 0;
+            for (; j<Players.Count - 1; j++){
+                Console.Write(Players[j] + ", ");
+            }
+            Console.WriteLine(Players[j]);
+            Console.Write("Your Hand: ");
             Players[0].ShowHand();
 
             Console.ReadLine();
@@ -133,11 +138,7 @@ namespace UnoModellingPractice.GameObjects
 
             foreach(var player in Players)
             {
-                if(player.GetType().Name == "HumanPlayer")
-                    Console.Write("Player Name: ");
-                else
-                    Console.Write("Player " + player.Position.ToString() + ": ");
-                Console.WriteLine(player.Hand.Sum(x => x.Score).ToString() + " points");
+                Console.WriteLine(player + ": " + player.Hand.Sum(x => x.Score).ToString() + " points");
             }
         }
 

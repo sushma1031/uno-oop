@@ -69,11 +69,11 @@ namespace UnoModellingPractice.GameObjects
         {
             if (currentTurn.Result == TurnResult.Draw)
             {
-                Console.WriteLine("Player " + Position.ToString() + " drew.");
+                Console.WriteLine(this + " drew.");
             }
             if(currentTurn.Result == TurnResult.PlayedDraw)
             {
-                Console.WriteLine("Player " + Position.ToString() + " can play the drawn card!");
+                Console.WriteLine(this + " can play the drawn card!");
             }
 
             if (currentTurn.Result == TurnResult.PlayedCard
@@ -87,7 +87,7 @@ namespace UnoModellingPractice.GameObjects
                 Console.WriteLine("Player " + Position.ToString() + ": " + currentTurn.Card.DisplayValue);
                 if(currentTurn.Card.Color == CardColor.Wild)
                 {
-                    Console.WriteLine("Player " + Position.ToString() + " chooses new colour: " + currentTurn.DeclaredColor.ToString());
+                    Console.WriteLine(this + " chooses new colour: " + currentTurn.DeclaredColor.ToString());
                 }
                 if(currentTurn.Result == TurnResult.Reversed)
                 {
@@ -97,7 +97,7 @@ namespace UnoModellingPractice.GameObjects
 
             if (Hand.Count == 1)
             {
-                Console.WriteLine("Player " + Position.ToString() + " shouts Uno!");
+                Console.WriteLine(this + " shouts Uno!");
             }
         }
 
@@ -109,17 +109,17 @@ namespace UnoModellingPractice.GameObjects
             turn.DeclaredColor = currentDiscard.Color;
             if(currentDiscard.Value == CardValue.Skip)
             {
-                Console.WriteLine("Player " + Position.ToString() + " was skipped!");
+                Console.WriteLine(this + " was skipped!");
                 return turn;
             }
             else if(currentDiscard.Value == CardValue.DrawTwo)
             {
-                Console.WriteLine("Player " + Position.ToString() + " must draw two cards!");
+                Console.WriteLine(this + " must draw two cards!");
                 Hand.AddRange(drawPile.Draw(2));
             }
             else if(currentDiscard.Value == CardValue.DrawFour)
             {
-                Console.WriteLine("Player " + Position.ToString() + " must draw four cards!");
+                Console.WriteLine(this + " must draw four cards!");
                 Hand.AddRange(drawPile.Draw(4));
             }
 
@@ -342,6 +342,11 @@ namespace UnoModellingPractice.GameObjects
                 Console.Write(Enum.GetName(typeof(CardColor), card.Color) + " " + Enum.GetName(typeof(CardValue), card.Value) + "  ");
             }
             Console.WriteLine("");
+        }
+
+        public override string ToString()
+        {
+            return $"Player {Position}";  
         }
     }
 }

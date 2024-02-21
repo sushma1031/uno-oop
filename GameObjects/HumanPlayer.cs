@@ -17,5 +17,10 @@ namespace UnoModellingPractice.GameObjects
         //     PlayerTurn turn = new PlayerTurn();
         //     return turn;
         // }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }
