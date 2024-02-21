@@ -52,10 +52,10 @@ namespace UnoModellingPractice
         Attacked,
 
         //Player was forced to draw because s/he couldn't match the current discard.
-        ForceDraw,
+        Draw,
 
         //Player was forced to draw because s/he couldn't match the current discard, but the drawn card was played.
-        ForceDrawPlay,
+        PlayedDraw,
 
         //Player played a regular wild card.
         WildCard,
