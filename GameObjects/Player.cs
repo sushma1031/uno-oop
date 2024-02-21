@@ -16,7 +16,7 @@ namespace UnoModellingPractice.GameObjects
             Hand = new List<Card>();
         }
 
-        public PlayerTurn PlayTurn(PlayerTurn previousTurn, CardDeck drawPile)
+        public virtual PlayerTurn PlayTurn(PlayerTurn previousTurn, CardDeck drawPile)
         {
             PlayerTurn turn = new PlayerTurn();
             if (previousTurn.Result == TurnResult.Skip
@@ -27,7 +27,7 @@ namespace UnoModellingPractice.GameObjects
             }
             else if ((previousTurn.Result == TurnResult.WildCard 
                         || previousTurn.Result == TurnResult.Attacked 
-                        || previousTurn.Result == TurnResult.ForceDraw) 
+                        || previousTurn.Result == TurnResult.Draw) 
                         && HasMatch(previousTurn.DeclaredColor))
             {
                 turn = PlayMatchingCard(previousTurn.DeclaredColor);
@@ -54,11 +54,11 @@ namespace UnoModellingPractice.GameObjects
             if (HasMatch(previousTurn.Card))
             {
                 turn = PlayMatchingCard(previousTurn.Card);
-                turn.Result = TurnResult.ForceDrawPlay;
+                turn.Result = TurnResult.PlayedDraw;
             }
             else
             {
-                turn.Result = TurnResult.ForceDraw;
+                turn.Result = TurnResult.Draw;
                 turn.Card = previousTurn.Card;
             }
 
@@ -67,13 +67,13 @@ namespace UnoModellingPractice.GameObjects
 
         private void DisplayTurn(PlayerTurn currentTurn)
         {
-            if (currentTurn.Result == TurnResult.ForceDraw)
+            if (currentTurn.Result == TurnResult.Draw)
             {
-                Console.WriteLine("Player " + Position.ToString() + " is forced to draw.");
+                Console.WriteLine("Player " + Position.ToString() + " drew.");
             }
-            if(currentTurn.Result == TurnResult.ForceDrawPlay)
+            if(currentTurn.Result == TurnResult.PlayedDraw)
             {
-                Console.WriteLine("Player " + Position.ToString() + " is forced to draw AND can play the drawn card!");
+                Console.WriteLine("Player " + Position.ToString() + " can play the drawn card!");
             }
 
             if (currentTurn.Result == TurnResult.PlayedCard
@@ -82,12 +82,12 @@ namespace UnoModellingPractice.GameObjects
                 || currentTurn.Result == TurnResult.WildCard
                 || currentTurn.Result == TurnResult.WildDrawFour
                 || currentTurn.Result == TurnResult.Reversed
-                || currentTurn.Result == TurnResult.ForceDrawPlay)
+                || currentTurn.Result == TurnResult.PlayedDraw)
             {
-                Console.WriteLine("Player " + Position.ToString() + " plays a " + currentTurn.Card.DisplayValue + " card.");
+                Console.WriteLine("Player " + Position.ToString() + ": " + currentTurn.Card.DisplayValue);
                 if(currentTurn.Card.Color == CardColor.Wild)
                 {
-                    Console.WriteLine("Player " + Position.ToString() + " declares " + currentTurn.DeclaredColor.ToString() + " as the new color.");
+                    Console.WriteLine("Player " + Position.ToString() + " chooses new colour: " + currentTurn.DeclaredColor.ToString());
                 }
                 if(currentTurn.Result == TurnResult.Reversed)
                 {
@@ -205,7 +205,7 @@ namespace UnoModellingPractice.GameObjects
             }
 
             //This should never happen
-            turn.Result = TurnResult.ForceDraw;
+            turn.Result = TurnResult.Draw;
             return turn;
         }
 
@@ -314,7 +314,7 @@ namespace UnoModellingPractice.GameObjects
             }
 
             //This should never happen
-            turn.Result = TurnResult.ForceDraw;
+            turn.Result = TurnResult.Draw;
             return turn;
         }
 
@@ -336,7 +336,7 @@ namespace UnoModellingPractice.GameObjects
         public void ShowHand()
         {
             SortHand();
-            Console.WriteLine("Player " + Position + "'s Hand: ");
+            // Console.WriteLine("Player " + Position + "'s Hand: ");
             foreach (var card in Hand)
             {
                 Console.Write(Enum.GetName(typeof(CardColor), card.Color) + " " + Enum.GetName(typeof(CardValue), card.Value) + "  ");

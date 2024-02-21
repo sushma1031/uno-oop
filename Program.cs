@@ -11,8 +11,7 @@ namespace UnoModellingPractice
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello Uno!");
-            GameManager manager = new GameManager(6);
+            GameManager manager = new GameManager(2);
 
             manager.PlayGame();
 

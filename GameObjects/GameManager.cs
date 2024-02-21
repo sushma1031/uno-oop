@@ -17,8 +17,15 @@ namespace UnoModellingPractice.GameObjects
             Players = new List<Player>();
             DrawPile = new CardDeck();
             DrawPile.Shuffle();
-
-            for (int i = 1; i <= numPlayers; i++)
+            string humanPlayer = "";
+            Console.Write("Name: ");
+            humanPlayer = Console.ReadLine();
+            if (string.IsNullOrEmpty(humanPlayer)) humanPlayer = "Human";
+            Players.Add(new HumanPlayer(humanPlayer)
+                {
+                    Position = 0
+                });
+            for (int i = 1; i < numPlayers; i++)
             {
                 Players.Add(new Player()
                 {
@@ -26,12 +33,12 @@ namespace UnoModellingPractice.GameObjects
                 });
             }
 
-            int maxCards = 7 * Players.Count;
+            int maxCards = 10;
             int dealtCards = 0;
 
             while(dealtCards < maxCards)
             {
-                for(int i = 0; i < numPlayers; i ++)
+                for(int i = 0; i < numPlayers; i++)
                 {
                     Players[i].Hand.Add(DrawPile.Cards.First());
                     DrawPile.Cards.RemoveAt(0);
@@ -56,10 +63,13 @@ namespace UnoModellingPractice.GameObjects
             bool isAscending = true;
 
             //First, let's show what each player starts with
-            foreach (var player in Players)
-            {
-                player.ShowHand();
-            }
+            // foreach (var player in Players)
+            // {
+            //     player.ShowHand();
+            // }
+
+            Console.WriteLine("Your Hand: ");
+            Players[0].ShowHand();
 
             Console.ReadLine();
 
@@ -70,11 +80,11 @@ namespace UnoModellingPractice.GameObjects
                 DeclaredColor = DiscardPile.First().Color
             };
 
-            Console.WriteLine("First card is a " + currentTurn.Card.DisplayValue + ".");
+            Console.WriteLine("First Card Up: " + currentTurn.Card.DisplayValue);
 
             while(!Players.Any(x => !x.Hand.Any()))
             {
-                if(DrawPile.Cards.Count < 4) //Cheating a bit here
+                if(DrawPile.Cards.Count < 4)
                 {
                     var currentCard = DiscardPile.First();
                     
@@ -123,7 +133,11 @@ namespace UnoModellingPractice.GameObjects
 
             foreach(var player in Players)
             {
-                Console.WriteLine("Player " + player.Position.ToString() + " has " + player.Hand.Sum(x => x.Score).ToString() + " points in his hand.");
+                if(player.GetType().Name == "HumanPlayer")
+                    Console.Write("Player Name: ");
+                else
+                    Console.Write("Player " + player.Position.ToString() + ": ");
+                Console.WriteLine(player.Hand.Sum(x => x.Score).ToString() + " points");
             }
         }
 
