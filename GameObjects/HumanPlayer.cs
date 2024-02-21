@@ -59,10 +59,11 @@ namespace UnoModellingPractice.GameObjects
                                 turn.Card = chosenCard;
                                 if (chosenCard.Color == CardColor.Wild)
                                 {
-                                    Console.Write("Colour: ");
-                                    string declaredColour = "";
-                                    declaredColour = Console.ReadLine();
-                                    turn.DeclaredColor = GetCardColor(declaredColour);
+                                    Console.Write("Color: ");
+                                    string declaredColor = "";
+                                    declaredColor = Console.ReadLine();
+                                    turn.DeclaredColor = GetCardColor(declaredColor);
+                                    turn.Result = TurnResult.WildCard;
                                 }
                                 else
                                 {
