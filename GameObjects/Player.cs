@@ -49,9 +49,11 @@ namespace UnoModellingPractice.GameObjects
         {
             PlayerTurn turn = new PlayerTurn();
             var drawnCard = drawPile.Draw(1);
+            // Console.WriteLine($"Drawn: {drawnCard[0].DisplayValue}");
             Hand.AddRange(drawnCard);
+            // Console.WriteLine("Previous: " + previousTurn.Card.DisplayValue);
 
-            if (HasMatch(previousTurn.Card))
+            if (IsValidCard(drawnCard[0], previousTurn.Card))
             {
                 turn = PlayMatchingCard(previousTurn.Card);
                 turn.Result = TurnResult.PlayedDraw;
@@ -71,12 +73,12 @@ namespace UnoModellingPractice.GameObjects
             {
                 Console.WriteLine(this + " drew.");
             }
-            if(currentTurn.Result == TurnResult.PlayedDraw)
+            else if(currentTurn.Result == TurnResult.PlayedDraw)
             {
                 Console.WriteLine(this + " can play the drawn card!");
             }
 
-            if (currentTurn.Result == TurnResult.PlayedCard
+            else if (currentTurn.Result == TurnResult.PlayedCard
                 || currentTurn.Result == TurnResult.Skip
                 || currentTurn.Result == TurnResult.DrawTwo 
                 || currentTurn.Result == TurnResult.WildCard
@@ -135,13 +137,16 @@ namespace UnoModellingPractice.GameObjects
         {
             return Hand.Any(x => x.Color == color || x.Color == CardColor.Wild);
         }
-
+        private bool IsValidCard(Card drawnCard, Card previous){
+            return drawnCard.Color == previous.Color || drawnCard.Value == previous.Value || drawnCard.Color == CardColor.Wild;
+        }
         private PlayerTurn PlayMatchingCard(CardColor color)
         {
             var turn = new PlayerTurn();
             turn.Result = TurnResult.PlayedCard;
             var matching = Hand.Where(x => x.Color == color || x.Color == CardColor.Wild).ToList();
 
+            //Play the card that would cause the most damage to the next player.
             if (matching.All(x => x.Value == CardValue.DrawFour))
             {
                 turn.Card = matching.First();
@@ -152,7 +157,6 @@ namespace UnoModellingPractice.GameObjects
                 return turn;
             }
 
-            //Play the card that would cause the most damage to the next player.
             if (matching.Any(x => x.Value == CardValue.DrawTwo))
             {
                 turn.Card = matching.First(x => x.Value == CardValue.DrawTwo);
@@ -213,8 +217,17 @@ namespace UnoModellingPractice.GameObjects
             turn.Result = TurnResult.PlayedCard;
             var matching = Hand.Where(x => x.Color == currentDiscard.Color || x.Value == currentDiscard.Value || x.Color == CardColor.Wild).ToList();
 
-            //play the card that would cause the most damage to the next player.
-            if(matching.Any(x=> x.Value == CardValue.DrawTwo))
+            //Play the card that would cause the most damage to the next player.
+            if (matching.All(x => x.Value == CardValue.DrawFour))
+            {
+                turn.Card = matching.First();
+                turn.DeclaredColor = SelectDominantColor();
+                turn.Result = TurnResult.WildCard;
+                Hand.Remove(matching.First());
+
+                return turn;
+            }
+            if (matching.Any(x=> x.Value == CardValue.DrawTwo))
             {
                 turn.Card = matching.First(x => x.Value == CardValue.DrawTwo);
                 turn.Result = TurnResult.DrawTwo;
