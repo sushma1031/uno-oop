@@ -1,34 +1,22 @@
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UnoModellingPractice.GameObjects;
 
-app.Urls.Add("http://localhost:5000");
-
-app.MapGet("/", () => "Hello World!");
-
-app.MapGet("/{cityName}/weather", GetWeatherByCity);
-
-app.Run();
-
-
-Weather GetWeatherByCity(string cityName)
+namespace UnoModellingPractice
 {
-    app.Logger.LogInformation($"Weather requested for {cityName}.");
-    var weather = new Weather(cityName);
-    return weather;
-}
-
-public record Weather
-{
-    public string City { get; set; }
-
-    public Weather(string city)
+    class Program
     {
-        City = city;
-        Conditions = "Cloudy";
-        // Temperature here is in celsius degrees, hence the 0-40 range.
-        Temperature = new Random().Next(0,40).ToString();
-    }
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello Uno!");
+            GameManager manager = new GameManager(6);
 
-    public string Conditions { get; set; }
-    public string Temperature { get; set; }
+            manager.PlayGame();
+
+            Console.ReadKey();
+        }
+    }
 }
