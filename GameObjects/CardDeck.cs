@@ -34,43 +34,18 @@ namespace UnoModellingPractice.GameObjects
                             case CardValue.Eight:
                             case CardValue.Nine:
 
-                                Cards.Add(new Card()
-                                {
-                                    Color = color,
-                                    Value = val,
-                                    Score = (int)val
-                                });
-                                Cards.Add(new Card()
-                                {
-                                    Color = color,
-                                    Value = val,
-                                    Score = (int)val
-                                });
+                                Cards.Add(new Card(color, val));
+                                Cards.Add(new Card(color, val));
                                 break;
                             case CardValue.Skip:
                             case CardValue.Reverse:
                             case CardValue.DrawTwo:
-                                Cards.Add(new Card()
-                                {
-                                    Color = color,
-                                    Value = val,
-                                    Score = 20
-                                });
-                                Cards.Add(new Card()
-                                {
-                                    Color = color,
-                                    Value = val,
-                                    Score = 20
-                                });
+                                Cards.Add(new Card(color, val));
+                                Cards.Add(new Card(color, val));
                                 break;
 
                             case CardValue.Zero:
-                                Cards.Add(new Card()
-                                {
-                                    Color = color,
-                                    Value = val,
-                                    Score = 0
-                                });
+                                Cards.Add(new Card(color, val));
                                 break;
                         }
                     }
@@ -79,21 +54,11 @@ namespace UnoModellingPractice.GameObjects
                 {
                     for (int i = 1; i <= 4; i++)
                     {
-                        Cards.Add(new Card()
-                        {
-                            Color = color,
-                            Value = CardValue.Wild,
-                            Score = 50
-                        });
+                        Cards.Add(new Card(color, CardValue.Wild));
                     }
                     for (int i = 1; i <= 4; i++)
                     {
-                        Cards.Add(new Card()
-                        {
-                            Color = color,
-                            Value = CardValue.DrawFour,
-                            Score = 50
-                        });
+                        Cards.Add(new Card(color, CardValue.DrawFour));
                     }
                 }
             }

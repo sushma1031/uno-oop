@@ -10,7 +10,11 @@ namespace UnoModellingPractice.GameObjects
     {
         public CardColor Color { get; set; }
         public CardValue Value { get; set; }
-        public int Score { get; set; }
+
+        public Card(CardColor colour, CardValue val) {
+            Color = colour;
+            Value = val;
+        }
 
         public string DisplayValue
         {

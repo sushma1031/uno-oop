@@ -136,10 +136,10 @@ namespace UnoModellingPractice.GameObjects
             var winningPlayer = Players.Where(x => !x.Hand.Any()).First();
             Console.WriteLine("Player " + winningPlayer.Position.ToString() + " wins!!");
 
-            foreach(var player in Players)
-            {
-                Console.WriteLine(player + ": " + player.Hand.Sum(x => x.Score).ToString() + " points");
-            }
+            // foreach(var player in Players)
+            // {
+            //     Console.WriteLine(player + ": " + player.Hand.Sum(x => x.Score).ToString() + " points");
+            // }
         }
 
         private void AddToDiscardPile(PlayerTurn currentTurn)
