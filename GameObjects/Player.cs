@@ -84,7 +84,7 @@ namespace UnoModellingPractice.GameObjects
                 || currentTurn.Result == TurnResult.Reversed
                 || currentTurn.Result == TurnResult.PlayedDraw)
             {
-                Console.WriteLine("Player " + Position.ToString() + ": " + currentTurn.Card.DisplayValue);
+                Console.WriteLine(this + ": " + currentTurn.Card.DisplayValue);
                 if(currentTurn.Card.Color == CardColor.Wild)
                 {
                     Console.WriteLine(this + " chooses new colour: " + currentTurn.DeclaredColor.ToString());
