@@ -58,7 +58,8 @@ namespace UnoModellingPractice.GameObjects
             if (HasMatch(previousTurn.Card))
             {
                 turn = PlayMatchingCard(previousTurn.Card);
-                turn.Result = TurnResult.PlayedDraw;
+                if(turn.Result == TurnResult.PlayedCard)
+                    turn.Result = TurnResult.PlayedDraw;
             }
             else
             {
