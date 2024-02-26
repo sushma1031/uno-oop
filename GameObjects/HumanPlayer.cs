@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace UnoModellingPractice.GameObjects
 {
@@ -14,6 +13,7 @@ namespace UnoModellingPractice.GameObjects
         }
 
         public override PlayerTurn PlayTurn(PlayerTurn previousTurn, CardDeck drawPile){
+            // Console.WriteLine($"Previous: {previousTurn.Card.DisplayValue}");
             PlayerTurn turn = new PlayerTurn();
             if (previousTurn.Result == TurnResult.Skip
                 || previousTurn.Result == TurnResult.DrawTwo
@@ -21,6 +21,7 @@ namespace UnoModellingPractice.GameObjects
             {
                 return ProcessAttack(previousTurn.Card, drawPile);
             }
+        
             else {
                 Console.Write("Your Hand: ");
                 ShowHand();
@@ -108,9 +109,49 @@ namespace UnoModellingPractice.GameObjects
         {
             PlayerTurn turn = new PlayerTurn();
             var drawnCard = drawPile.Draw(1);
-            Console.WriteLine($"Drawn: {drawnCard[0].DisplayValue}");
+
+            switch(drawnCard[0].Color){
+                    case CardColor.Red:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        break;
+                    case CardColor.Blue:
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        break;
+                    case CardColor.Green:
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        break;
+                    case CardColor.Yellow:
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        break;
+                    default:
+                        Console.ResetColor();
+                        break;
+                }
+            
+            Console.WriteLine($"    Drawn: {drawnCard[0].DisplayValue}");
+            Console.ResetColor();
             Hand.AddRange(drawnCard);
-            // Console.WriteLine("Previous: " + previousTurn.Card.DisplayValue);
+
+            switch(previousTurn.Card.Color){
+                    case CardColor.Red:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        break;
+                    case CardColor.Blue:
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        break;
+                    case CardColor.Green:
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        break;
+                    case CardColor.Yellow:
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        break;
+                    default:
+                        Console.ResetColor();
+                        break;
+                }
+            
+            Console.WriteLine("     Previous Card: " + previousTurn.Card.DisplayValue);
+            Console.ResetColor();
 
             if (ValidCard(drawnCard[0], previousTurn))
             {
@@ -133,6 +174,7 @@ namespace UnoModellingPractice.GameObjects
             {
                 turn.Result = TurnResult.Draw;
                 turn.Card = previousTurn.Card;
+                turn.DeclaredColor = previousTurn.Card.Color;
             }
 
             return turn;
@@ -169,13 +211,15 @@ namespace UnoModellingPractice.GameObjects
         }
 
         private bool ValidCard(Card chosenCard, PlayerTurn previousTurn){
+            if(previousTurn.Result == TurnResult.WildCard || previousTurn.Result == TurnResult.WildDrawFour){
+                // Console.WriteLine($"Check {previousTurn.DeclaredColor.ToString()} == {chosenCard.Color.ToString()}");
+                return chosenCard.Color == previousTurn.DeclaredColor;
+            }
+            if(previousTurn.Result == TurnResult.Attacked){
+                return chosenCard.Color == previousTurn.DeclaredColor || chosenCard.Value == previousTurn.Card.Value;
+            }
             if(chosenCard.Color == CardColor.Wild){
                 return true;
-            }
-            if (previousTurn.Result == TurnResult.WildCard && chosenCard.Color != previousTurn.DeclaredColor)
-            {
-                // Console.WriteLine($"{previousTurn.DeclaredColor.ToString()} != {chosenCard.Color.ToString()}");
-                return false;
             }
             if (!(chosenCard.Color == previousTurn.DeclaredColor || chosenCard.Value == previousTurn.Card.Value))
             {

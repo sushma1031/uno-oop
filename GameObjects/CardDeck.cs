@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace UnoModellingPractice.GameObjects
 {
@@ -14,7 +13,7 @@ namespace UnoModellingPractice.GameObjects
         {
             Cards = new List<Card>();
 
-            #region Create the cards
+            //Create the cards
 
             foreach (CardColor color in Enum.GetValues(typeof(CardColor)))
             {
@@ -62,7 +61,6 @@ namespace UnoModellingPractice.GameObjects
                     }
                 }
             }
-            #endregion
         }
 
         public CardDeck(List<Card> cards)

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace UnoModellingPractice.GameObjects
 {
@@ -82,14 +81,34 @@ namespace UnoModellingPractice.GameObjects
             PlayerTurn currentTurn = new PlayerTurn()
             {
                 Result = TurnResult.GameStart,
-                Card = DiscardPile.First(x => x.Color != CardColor.Wild 
-                && x.Value != CardValue.Reverse 
-                && x.Value != CardValue.Skip 
-                && x.Value != CardValue.DrawTwo),
+                Card = DiscardPile.First(),
                 DeclaredColor = DiscardPile.First().Color
+                // x => x.Color != CardColor.Wild 
+                // && x.Value != CardValue.Reverse 
+                // && x.Value != CardValue.Skip 
+                // && x.Value != CardValue.DrawTwo
             };
+            Console.Write("First Card Up: ");
 
-            Console.WriteLine("First Card Up: " + currentTurn.Card.DisplayValue);
+            switch(currentTurn.Card.Color){
+                    case CardColor.Red:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        break;
+                    case CardColor.Blue:
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        break;
+                    case CardColor.Green:
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        break;
+                    case CardColor.Yellow:
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        break;
+                    default:
+                        Console.ResetColor();
+                        break;
+                }
+            Console.WriteLine(currentTurn.Card.DisplayValue);
+            Console.ResetColor();
 
             while(!Players.Any(x => !x.Hand.Any()))
             {

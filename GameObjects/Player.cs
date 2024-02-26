@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace UnoModellingPractice.GameObjects
 {
@@ -64,6 +64,7 @@ namespace UnoModellingPractice.GameObjects
             {
                 turn.Result = TurnResult.Draw;
                 turn.Card = previousTurn.Card;
+                turn.DeclaredColor = previousTurn.DeclaredColor;
             }
 
             return turn;
@@ -80,15 +81,32 @@ namespace UnoModellingPractice.GameObjects
                 Console.WriteLine(this + " can play the drawn card!");
             }
 
-            else if (currentTurn.Result == TurnResult.PlayedCard
+            if (currentTurn.Result == TurnResult.PlayedCard
                 || currentTurn.Result == TurnResult.Skip
                 || currentTurn.Result == TurnResult.DrawTwo 
                 || currentTurn.Result == TurnResult.WildCard
                 || currentTurn.Result == TurnResult.WildDrawFour
                 || currentTurn.Result == TurnResult.Reversed
                 || currentTurn.Result == TurnResult.PlayedDraw)
-            {
-                Console.WriteLine(this + ": " + currentTurn.Card.DisplayValue);
+            {   
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.Write(this + ": ");
+                switch(currentTurn.Card.Color){
+                    case CardColor.Red:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        break;
+                    case CardColor.Blue:
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        break;
+                    case CardColor.Green:
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        break;
+                    case CardColor.Yellow:
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        break;
+                }
+                Console.WriteLine(currentTurn.Card.DisplayValue);
+                Console.ResetColor();
                 if(currentTurn.Card.Color == CardColor.Wild)
                 {
                     Console.WriteLine(this + " chooses new colour: " + currentTurn.DeclaredColor.ToString());
@@ -341,8 +359,26 @@ namespace UnoModellingPractice.GameObjects
             // Console.WriteLine("Player " + Position + "'s Hand: ");
             foreach (var card in Hand)
             {
+                switch(card.Color){
+                    case CardColor.Red:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        break;
+                    case CardColor.Blue:
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        break;
+                    case CardColor.Green:
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        break;
+                    case CardColor.Yellow:
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        break;
+                    default:
+                        Console.ResetColor();
+                        break;
+                }
                 Console.Write(card.DisplayValue + "  ");
             }
+            Console.ResetColor();
             Console.WriteLine("");
         }
 
